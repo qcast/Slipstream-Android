@@ -39,4 +39,9 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
         context.startService(update);
 
     }
+
+    @Override
+    protected void onPushOpen(Context context, Intent intent) {
+
+    }
 }

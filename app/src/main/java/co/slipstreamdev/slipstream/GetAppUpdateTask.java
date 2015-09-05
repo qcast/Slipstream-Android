@@ -28,16 +28,21 @@ public class GetAppUpdateTask {
 
     public void execute(String url) {
 
+        File updateFile = new File(DIRECTORY);
+        updateFile.mkdirs();
+        File outputFile = new File(updateFile, NAME);
+        if (outputFile.exists())
+            outputFile.delete();
+
         downloading = Ion.with(mContext)
                 .load(url)
-                .write(new File(DIRECTORY + NAME))
+                .write(outputFile)
                 .setCallback(new FutureCallback<File>() {
                     @Override
                     public void onCompleted(Exception e, File result) {
                         resetDownload();
                         if (e != null) {
                             Log.e(TAG, e.toString());
-                            //return;
                         }
                         mListener.onUpdateDownloaded(DIRECTORY + NAME);
                     }
