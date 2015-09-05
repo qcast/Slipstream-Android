@@ -3,23 +3,27 @@ package co.slipstreamdev.slipstream;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
-import com.parse.Parse;
+import java.io.IOException;
 
 public class UpdateService extends Service {
 
     String url;
     private boolean running;
-    private static Thread task;
+    private static GetAppUpdateTask task;
+
+    public interface Listener {
+        public void onUpdateDownloaded(String path);
+    }
 
     @Override
     public void onCreate() {
         running = false;
-        task = new Thread(new Runnable() {
+        task = new GetAppUpdateTask(new Listener() {
             @Override
-            public void run() {
-
-                stopSelf();
+            public void onUpdateDownloaded(String path) {
+                installUpdate(path);
             }
         });
     }
@@ -29,7 +33,7 @@ public class UpdateService extends Service {
         url = intent.getStringExtra(ParsePushReceiver.PARSE_ARTIFACT);
         if (!running) {
             running = true;
-            task.start();
+            task.execute(url);
         }
         return Service.START_NOT_STICKY;
     }
@@ -42,5 +46,17 @@ public class UpdateService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void installUpdate(String path) {
+        try
+        {
+            Runtime.getRuntime().exec(new String[] {"su", "-c", "pm install -r " + path});
+        }
+        catch (IOException e)
+        {
+            Log.e("Slipstream", e.toString());
+        }
+
     }
 }

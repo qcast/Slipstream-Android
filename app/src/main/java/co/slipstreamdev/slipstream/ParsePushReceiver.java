@@ -12,6 +12,8 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
     @Override
     protected void onPushOpen(Context context, Intent intent) {
         String url = intent.getExtras().getString(PARSE_ARTIFACT);
-
+        Intent update = new Intent(context, UpdateService.class);
+        update.putExtra(PARSE_ARTIFACT, url);
+        context.startService(update);
     }
 }
