@@ -11,6 +11,8 @@ import java.io.File;
 
 public class GetAppUpdateTask {
 
+    public static final String TAG = "Slipstream";
+
     private static final String DIRECTORY = "/sdcard/Slipstream/";
     private static final String NAME = "update.apk";
 
@@ -34,7 +36,7 @@ public class GetAppUpdateTask {
                     public void onCompleted(Exception e, File result) {
                         resetDownload();
                         if (e != null) {
-                            Log.e("Slipstream", e.toString());
+                            Log.e(TAG, e.toString());
                             //return;
                         }
                         mListener.onUpdateDownloaded(DIRECTORY + NAME);

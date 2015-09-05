@@ -12,22 +12,31 @@ import org.json.JSONObject;
 
 public class ParsePushReceiver extends ParsePushBroadcastReceiver {
 
+    public static final String TAG = "Slipstream";
+
     public static final String PARSE_ARTIFACT = "artifact";
+    public static final String PARSE_DATA_LOCATION = "com.parse.Data";
 
     @Override
-    protected void onPushOpen(Context context, Intent intent) {
+    protected void onPushReceive(Context context, Intent intent) {
+
+        // Create notification.
+        super.onPushReceive(context, intent);
+
+        // Update.
         Bundle extras = intent.getExtras();
         String url;
         try {
-            JSONObject pushData = new JSONObject(extras.getString("com.parse.Data"));
+            JSONObject pushData = new JSONObject(extras.getString(PARSE_DATA_LOCATION));
             url = pushData.getString(PARSE_ARTIFACT);
         } catch (JSONException e) {
-            Log.e("Slipstream", e.toString());
+            Log.e(TAG, e.toString());
             return;
         }
         Intent update = new Intent(context, UpdateService.class);
         update.putExtra(PARSE_ARTIFACT, url);
-        Log.d("Slipstream", url);
+        Log.d(TAG, url);
         context.startService(update);
+
     }
 }

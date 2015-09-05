@@ -9,6 +9,8 @@ import com.parse.ParseUser;
 
 public class SlipApplication extends Application {
 
+    public static final String PARSE_CHANNEL_NAME = "android-demo";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -17,7 +19,7 @@ public class SlipApplication extends Application {
 
         Parse.initialize(this, BuildConfig.PARSE_APPLICATION_ID, BuildConfig.PARSE_CLIENT_KEY);
         ParseUser.enableAutomaticUser();
-        ParsePush.subscribeInBackground("android-demo");
+        ParsePush.subscribeInBackground(PARSE_CHANNEL_NAME);
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 }
