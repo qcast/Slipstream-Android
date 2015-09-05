@@ -1,61 +1,50 @@
 package co.slipstreamdev.slipstream;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.util.Log;
 
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
-public class GetAppUpdateTask extends AsyncTask<String, Void, String> {
+public class GetAppUpdateTask {
 
-    private static final String DIRECTORY = "/sdcard/Slipstream";
+    private static final String DIRECTORY = "/sdcard/Slipstream/";
     private static final String NAME = "update.apk";
 
     private final UpdateService.Listener mListener;
+    private Context mContext;
 
-    public GetAppUpdateTask(UpdateService.Listener listener) {
+    private Future<File> downloading;
+
+    public GetAppUpdateTask(UpdateService.Listener listener, Context context) {
         mListener = listener;
+        mContext = context;
     }
 
-    @Override
-    protected String doInBackground(String... arg0) {
-        try {
-            URL url = new URL(arg0[0]);
-            HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-            httpConnection.setRequestMethod("GET");
-            httpConnection.setDoOutput(true);
-            httpConnection.connect();
+    public void execute(String url) {
 
-            File updateFile = new File(DIRECTORY);
-            updateFile.mkdirs();
-            File outputFile = new File(updateFile, NAME);
-            if (outputFile.exists())
-                outputFile.delete();
-
-            FileOutputStream stream = new FileOutputStream(outputFile);
-
-            InputStream input = httpConnection.getInputStream();
-
-            byte[] buffer = new byte[1024];
-            int i;
-            while ((i = input.read(buffer)) != -1) {
-                stream.write(buffer, 0, i);
-            }
-            stream.close();
-            input.close();
-
-        } catch (Exception e) {
-            Log.e("Slipstream", "Update error " + e.getMessage());
-        }
-        return null;
+        downloading = Ion.with(mContext)
+                .load(url)
+                .write(new File(DIRECTORY + NAME))
+                .setCallback(new FutureCallback<File>() {
+                    @Override
+                    public void onCompleted(Exception e, File result) {
+                        resetDownload();
+                        if (e != null) {
+                            Log.e("Slipstream", e.toString());
+                            //return;
+                        }
+                        mListener.onUpdateDownloaded(DIRECTORY + NAME);
+                    }
+                });
     }
 
-    @Override
-    protected void onPostExecute(String result) {
-        mListener.onUpdateDownloaded(DIRECTORY + NAME);
+    private void resetDownload() {
+        downloading.cancel();
+        downloading = null;
     }
 }
 

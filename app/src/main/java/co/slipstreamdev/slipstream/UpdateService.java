@@ -10,37 +10,30 @@ import java.io.IOException;
 public class UpdateService extends Service {
 
     String url;
-    private boolean running;
     private static GetAppUpdateTask task;
 
     public interface Listener {
-        public void onUpdateDownloaded(String path);
+        void onUpdateDownloaded(String path);
     }
 
     @Override
     public void onCreate() {
-        running = false;
+        Log.d("Slipstream", "starting service");
         task = new GetAppUpdateTask(new Listener() {
             @Override
             public void onUpdateDownloaded(String path) {
+                Log.d("Slipstream", "installing in listener");
                 installUpdate(path);
             }
-        });
+        }, UpdateService.this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         url = intent.getStringExtra(ParsePushReceiver.PARSE_ARTIFACT);
-        if (!running) {
-            running = true;
-            task.execute(url);
-        }
+        Log.d("Slipstream", "onstart " + url);
+        task.execute(url);
         return Service.START_NOT_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        running = false;
     }
 
     @Override
@@ -51,6 +44,7 @@ public class UpdateService extends Service {
     private void installUpdate(String path) {
         try
         {
+            Log.d("Slipstream", "su command");
             Runtime.getRuntime().exec(new String[] {"su", "-c", "pm install -r " + path});
         }
         catch (IOException e)
