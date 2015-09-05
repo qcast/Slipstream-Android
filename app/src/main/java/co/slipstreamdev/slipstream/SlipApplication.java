@@ -6,7 +6,6 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
-import com.parse.PushService;
 
 public class SlipApplication extends Application {
 
