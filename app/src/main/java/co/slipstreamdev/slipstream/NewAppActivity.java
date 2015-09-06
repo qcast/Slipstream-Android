@@ -1,18 +1,30 @@
 package co.slipstreamdev.slipstream;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
+
+import com.parse.ParsePush;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewAppActivity extends AppCompatActivity {
 
     public static final String TAG = "Slipstream";
 
-    public static final String ENTERED_TEXT = "entered_text";
+    private static final String ENTERED_TEXT = "entered_text";
+    private static final String TOGGLE_STATE = "toggle_state";
+
+    private boolean toggleState = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +37,28 @@ public class NewAppActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Switch autoUpdateSwitch = (Switch) findViewById(R.id.autotoggle);
+        autoUpdateSwitch.setChecked(true);
+        autoUpdateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                toggleState = isChecked;
+            }
+        });
+
         if (savedInstanceState != null) {
             ((EditText) findViewById(R.id.project_text)).setText(savedInstanceState.getString(ENTERED_TEXT));
+            ((Switch) findViewById(R.id.autotoggle)).setChecked(savedInstanceState.getBoolean(TOGGLE_STATE));
         }
+
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ENTERED_TEXT, ((EditText) findViewById(R.id.project_text)).getText().toString());
+        outState.putBoolean(TOGGLE_STATE, toggleState);
     }
 
     @Override
@@ -61,5 +86,14 @@ public class NewAppActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmClick(View view) {
+        SharedPreferences preferences = getSharedPreferences(SlipApplication.SHARED_PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Set<String> subscribedChannels = preferences.getStringSet(SlipApplication.PREF_SUBSCRIPTIONS, new HashSet<String>());
+        subscribedChannels.add(((EditText) findViewById(R.id.project_text)).getText().toString());
+        editor.putStringSet(SlipApplication.PREF_SUBSCRIPTIONS, subscribedChannels);
+        ParsePush.subscribeInBackground(((EditText) findViewById(R.id.project_text)).getText().toString());
     }
 }
