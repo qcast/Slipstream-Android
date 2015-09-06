@@ -6,10 +6,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 public class NewAppActivity extends AppCompatActivity {
 
     public static final String TAG = "Slipstream";
+
+    public static final String ENTERED_TEXT = "entered_text";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,17 @@ public class NewAppActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.text_toolbar);
         Log.d(TAG, "showing toolbar");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState != null) {
+            ((EditText) findViewById(R.id.project_text)).setText(savedInstanceState.getString(ENTERED_TEXT));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ENTERED_TEXT, ((EditText) findViewById(R.id.project_text)).getText().toString());
     }
 
     @Override
