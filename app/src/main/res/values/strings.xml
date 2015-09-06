@@ -6,4 +6,6 @@
     <string name="title_activity_new_app">Add App</string>
     <string name="add_app_prefill">Project Name</string>
     <string name="add_app_description">Add a project to get automatic updates as you develop.</string>
+    <string name="auto_app_update_toggle">Automatically update this app when a new build is ready</string>
+    <string name="auto_app_update_toggle_sub">Otherwise, manually click the notification</string>
 </resources>
