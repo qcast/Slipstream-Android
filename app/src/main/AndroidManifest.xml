@@ -60,7 +60,14 @@
             android:exported="true" >
         </service>
 
-        <meta-data android:name="com.parse.push.notification_icon" android:resource="@drawable/ic_stat_name"/>
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/ic_stat_name" />
+
+        <activity
+            android:name=".NewAppActivity"
+            android:label="@string/title_activity_new_app" >
+        </activity>
     </application>
 
 </manifest>

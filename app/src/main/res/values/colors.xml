@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="app_accent" type="color">#FFFFBB33</item>
+    <item name="main_color" type="color">#3f51b5</item>
+    <item name="darker_color" type="color">#283593</item>
 </resources>

@@ -1,36 +1,31 @@
 package co.slipstreamdev.slipstream;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.parse.ParseAnalytics;
-
-public class MainActivity extends AppCompatActivity {
+public class NewAppActivity extends AppCompatActivity {
 
     public static final String TAG = "Slipstream";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_main_toolbar);
+        setContentView(R.layout.activity_new_app);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.text_toolbar);
+        Log.d(TAG, "showing toolbar");
         setSupportActionBar(toolbar);
-
-        ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_new_app, menu);
         return true;
     }
 
@@ -46,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
-    }
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
 
-    public void addNewApp(View view) {
-        Intent intent = new Intent(this, NewAppActivity.class);
-        startActivity(intent);
+        return super.onOptionsItemSelected(item);
     }
 }

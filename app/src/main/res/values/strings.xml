@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_new_app">Add App</string>
+    <string name="add_app_prefill">Project Name</string>
+    <string name="add_app_description">Add a project to get automatic updates as you develop.</string>
 </resources>
