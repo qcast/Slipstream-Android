@@ -21,6 +21,7 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Slipstream";
+    public static final String IMG_URL = "https://raw.githubusercontent.com/sciencepro/QCast-Android/master/core/src/main/res/drawable-xxxhdpi/ic_launcher.png?token=ABK4w66JOh13npJe8yuyldUpOYtvSvE4ks5V9QZswA%3D%3D";
 
     private List<Subscription> channels;
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO Retrofit
 
         for (String channel : subscribedChannels) {
-            Subscription sub = new Subscription(channel, "http://i.imgur.com/DvpvklR.png", "test");
+            Subscription sub = new Subscription(channel, IMG_URL, "Last updated 21 minutes ago");
             channels.add(sub);
             Log.d(TAG, "adding channel " + channel);
         }

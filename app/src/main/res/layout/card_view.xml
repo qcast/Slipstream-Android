@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="140dp"
     card_view:cardCornerRadius="4dp"
     card_view:cardUseCompatPadding="true" >
 
@@ -16,7 +16,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/card_image"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -30,6 +30,7 @@
             android:layout_toRightOf="@+id/card_image"
             android:layout_alignParentTop="true"
             android:textSize="30sp"
+            android:layout_marginTop="11dp"
             />
 
         <TextView
@@ -38,6 +39,7 @@
             android:id="@+id/card_build_info"
             android:layout_toRightOf="@+id/card_image"
             android:layout_below="@+id/card_name"
+            android:layout_marginTop="11dp"
             />
 
     </RelativeLayout>
