@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,11 +14,15 @@ import android.view.View;
 
 import com.parse.ParseAnalytics;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Slipstream";
+
+    private List<Subscription> channels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(SlipApplication.SHARED_PREFS_NAME, MODE_PRIVATE);
         Set<String> subscribedChannels = preferences.getStringSet(SlipApplication.PREF_SUBSCRIPTIONS, null);
-        if (subscribedChannels != null) {
-            for (String subscription : subscribedChannels) {
 
-            }
+        RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.main_card_recycler);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        cardRecyclerView.setLayoutManager(layoutManager);
+
+        if (subscribedChannels != null) {
+            initializeSubscriptions(subscribedChannels);
+
+            CardAdapter adapter = new CardAdapter(channels, this);
+            cardRecyclerView.setAdapter(adapter);
+        } else {
+            Log.d(TAG, "null subscriptions");
+            cardRecyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -57,6 +72,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initializeSubscriptions(Set<String> subscribedChannels) {
+        channels = new ArrayList<>();
+        // TODO Retrofit
+
+        for (String channel : subscribedChannels) {
+            Subscription sub = new Subscription(channel, "http://i.imgur.com/DvpvklR.png", "test");
+            channels.add(sub);
+            Log.d(TAG, "adding channel " + channel);
+        }
+
     }
 
     public void addNewApp(View view) {

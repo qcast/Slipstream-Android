@@ -88,12 +88,17 @@ public class NewAppActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void confirmClick(View view) {
+    public void confirmClick(View view) {
         SharedPreferences preferences = getSharedPreferences(SlipApplication.SHARED_PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> subscribedChannels = preferences.getStringSet(SlipApplication.PREF_SUBSCRIPTIONS, new HashSet<String>());
         subscribedChannels.add(((EditText) findViewById(R.id.project_text)).getText().toString());
+        editor.remove(SlipApplication.PREF_SUBSCRIPTIONS);
+        editor.apply();
         editor.putStringSet(SlipApplication.PREF_SUBSCRIPTIONS, subscribedChannels);
+        editor.apply();
+        editor.commit();
         ParsePush.subscribeInBackground(((EditText) findViewById(R.id.project_text)).getText().toString());
+        finish();
     }
 }
